@@ -1,0 +1,50 @@
+name: mychat
+description: A new chat app.
+
+
+publish_to: 'none'
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  # Firebase dependencies
+  firebase_core: ^1.13.1
+  firebase_auth: ^3.3.11
+  cloud_firestore: ^3.1.10
+  firebase_storage: ^10.2.9
+  firebase_messaging: ^11.2.12
+  # Style
+  google_fonts: ^2.3.1
+  # State Management
+  get_it: ^7.2.0
+  provider: ^6.0.2
+  #Social signIn
+  google_sign_in: ^5.2.4
+  #Email Validator
+  email_validator: ^2.0.1
+  #Platte generator
+  palette_generator: ^0.3.3
+  #Image picker
+  image_picker: ^0.8.4+11
+  #Icons
+  font_awesome_flutter: ^10.1.0
+  #DateTime formatter
+  intl: ^0.17.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
