@@ -1,6 +1,6 @@
 # mychat
 
-A new chat app.
+A new social platform.
 
 ## Getting Started
 
