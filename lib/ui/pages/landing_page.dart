@@ -17,7 +17,7 @@ class LandingPage extends StatelessWidget {
       if (_userViewModel.userModel == null) {
         return const SignInPage();
       } else {
-        return   HomePage(userModel: _userViewModel.userModel,);
+        return  HomePage(userModel: _userViewModel.userModel,);
       }
     } else {
       return const Scaffold(

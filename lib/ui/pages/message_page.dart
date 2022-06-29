@@ -3,12 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:mychat/ui/pages/user_detail_page.dart';
 
 import 'package:provider/provider.dart';
 import '../../model/chat_profile_model.dart';
 import '../../model/message_model.dart';
 import '../../model/new_user_model.dart';
 
+import '../../viewModel/user_detail_view-model.dart';
 import '../../viewModel/user_view_model.dart';
 import '../constant/constant_color.dart';
 
@@ -25,8 +27,8 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  TextEditingController _messageController = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class _MessagePageState extends State<MessagePage> {
               padding: const EdgeInsets.only(
                   top: 10, left: 10, right: 10, bottom: 15),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                       onPressed: () {
@@ -52,32 +55,33 @@ class _MessagePageState extends State<MessagePage> {
                         color: Colors.black,
                         size: 28,
                       )),
-                  const SizedBox(
-                    width: 10,
+
+
+                  Text(
+                    widget.userToMessage.name!,
+                    style: GoogleFonts.lato(fontSize: 19),
                   ),
-                  CircleAvatar(
-                    backgroundImage:
-                    NetworkImage(widget.userToMessage.profileImageUrl!),
-                    radius: 20,
+
+
+
+
+
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                          ChangeNotifierProvider(
+                            create: (BuildContext context) => UserDetailViewModel(_userToMessage.userId),
+                            child: UserDetailPage(
+                              userName: _userToMessage.userName!,
+                            ),
+                          )));
+                    },
+                    child: CircleAvatar(
+                      backgroundImage:
+                      NetworkImage(widget.userToMessage.profileImageUrl!),
+                      radius: 21,
+                    ),
                   ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.userToMessage.name!,
-                        style: GoogleFonts.lato(fontSize: 17),
-                      ),
-                      Text(
-                        widget.userToMessage.userName!,
-                        style:
-                        GoogleFonts.lato(fontSize: 13, color: Colors.grey),
-                      )
-                    ],
-                  )
                 ],
               ),
             ),

@@ -4,12 +4,13 @@ import 'package:provider/provider.dart';
 
 import '../../model/new_user_model.dart';
 
+import '../../viewModel/post_view_model.dart';
 import '../functions/tab_items.dart';
 import '../widgets/page_widgets/home/custom_bottom_navigation_bar.dart';
 import 'chats_page.dart';
 import 'profile_page.dart';
 import 'posts_page.dart';
-import 'users_page.dart';
+import 'search_page.dart';
 
 class HomePage extends StatefulWidget {
   final NewUserModel? userModel;
@@ -26,8 +27,11 @@ class _HomePageState extends State<HomePage> {
   Map<TabItem, Widget> allPages() {
     return {
       TabItem.chats: const ChatsPage(),
-      TabItem.search: const UsersPage(),
-      TabItem.posts: const PostsPage(),
+      TabItem.search: const SearchPage(),
+      TabItem.posts: ChangeNotifierProvider(
+        create: (BuildContext context) => PostViewModel(),
+        child:  const PostsPage(),
+      ),
       TabItem.profile: ChangeNotifierProvider(
         create: (BuildContext context) => ProfileViewModel(),
         child:  ProfilePage(userName: widget.userModel!.userName!,),

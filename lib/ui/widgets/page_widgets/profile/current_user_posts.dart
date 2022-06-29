@@ -7,16 +7,16 @@ import 'package:mychat/viewModel/profile_view_model.dart';
 
 import '../../../../model/post_model.dart';
 
-class Stories extends StatefulWidget {
+class CurrentUserPosts extends StatefulWidget {
   final ProfileViewModel profileViewModel;
 
-  const Stories({required this.profileViewModel, Key? key}) : super(key: key);
+  const CurrentUserPosts({required this.profileViewModel, Key? key}) : super(key: key);
 
   @override
-  State<Stories> createState() => _StoriesState();
+  State<CurrentUserPosts> createState() => _CurrentUserPostsState();
 }
 
-class _StoriesState extends State<Stories> {
+class _CurrentUserPostsState extends State<CurrentUserPosts> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(

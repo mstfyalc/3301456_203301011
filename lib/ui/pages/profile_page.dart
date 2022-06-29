@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mychat/ui/pages/create_post_page.dart';
-import 'package:mychat/ui/widgets/page_widgets/profile/stories.dart';
+import 'package:mychat/ui/pages/create_story_page.dart';
+import 'package:mychat/ui/widgets/page_widgets/profile/current_user_posts.dart';
 import 'package:mychat/viewModel/profile_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -140,10 +141,75 @@ class _ProfilePageState extends State<ProfilePage> {
             actions: [
               IconButton(
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                          fullscreenDialog: true,
-                          builder: (context) =>  CreatePostPage(profileViewModel: _profileViewModel,)));
+                  showModalBottomSheet(
+                    useRootNavigator: true,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(26),
+                            topRight: Radius.circular(26))),
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        padding:
+                            const EdgeInsets.only(top: 5, left: 0, bottom: 5),
+                        height: 190,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const SizedBox(
+                              height: 1,
+                            ),
+                            Container(
+                              width: 38,
+                              height: 4,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: const Color(0xffadb5bd)),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Create',
+                              style: GoogleFonts.lato(fontSize: 17,fontWeight: FontWeight.w400),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Divider(height: 3),
+                            ListTile(
+                              leading: const Icon(CupertinoIcons.photo),
+                              contentPadding: const EdgeInsets.only(left: 25),
+                              title: Text(
+                                'Post',
+                                style: GoogleFonts.lato(),
+                              ),
+                              onTap: (){
+                                Navigator.of(context, rootNavigator: true).push(
+                                    MaterialPageRoute(
+                                        fullscreenDialog: true,
+                                        builder: (context) =>  CreatePostPage(profileViewModel: _profileViewModel,)));
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(CupertinoIcons.photo_camera),
+                              contentPadding: const EdgeInsets.only(left: 25),
+                              onTap: (){
+                                Navigator.of(context, rootNavigator: true).push(
+                                    MaterialPageRoute(
+                                        fullscreenDialog: true,
+                                        builder: (context) =>  CreateStoryPage(profileViewModel: _profileViewModel,)));
+                              },
+                              title: Text(
+                                'Story',
+                                style: GoogleFonts.lato(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
                 },
                 icon: const Icon(
                   CupertinoIcons.add_circled,
@@ -227,19 +293,25 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                HeadProfile(currentUser: currentUser,profileViewModel: _profileViewModel,),
+                HeadProfile(
+                  currentUser: currentUser,
+                  profileViewModel: _profileViewModel,
+                ),
                 const SizedBox(
                   height: 15,
                 ),
-                Expanded(child: Stories(profileViewModel: _profileViewModel,))
+                Expanded(
+                    child: CurrentUserPosts(
+                  profileViewModel: _profileViewModel,
+                ))
               ],
             ),
-          )) ;
-    }else{
+          ));
+    } else {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.userName ,
+            widget.userName,
             style: ConstantStyle.appNames,
           ),
           backgroundColor: Colors.transparent,

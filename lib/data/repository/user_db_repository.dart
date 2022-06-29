@@ -1,7 +1,10 @@
 import 'package:mychat/model/chat_profile_model.dart';
+import 'package:mychat/model/comment_model.dart';
 import 'package:mychat/model/conversations_model.dart';
 import 'package:mychat/model/message_model.dart';
+import 'package:mychat/model/post_like_model.dart';
 import 'package:mychat/model/post_model.dart';
+import 'package:mychat/model/story_model.dart';
 
 import '../../model/new_user_model.dart';
 import '../../provider/get_it/locator.dart';
@@ -93,18 +96,36 @@ class UserDbRepository implements DbBase {
   Stream<List<PostModel>>? getPostsByUserId(String userId) {
     return _dbService.getPostsByUserId(userId);
   }
-
+  
   @override
-  Future<void> increasePostLike(String postId,String userId) {
-    return _dbService.increasePostLike(postId,userId);
+  Stream<List<PostModel>> getAllPost() {
+    return _dbService.getAllPost();
   }
 
   @override
-  Future<void> decreasePostLike(String postId,String userId) {
-    return _dbService.decreasePostLike(postId,userId);
+  Future<bool> saveComment(CommentModel commentModel) {
+    return _dbService.saveComment(commentModel);
   }
 
+  @override
+  Stream<List<CommentModel>>? getAllCommentByPostId(String postId) {
+    return _dbService.getAllCommentByPostId(postId);
+  }
 
+  @override
+  Stream<List<ConversationsModel>>? getConversationByName(String conName,String userId) {
+    return _dbService.getConversationByName(conName, userId);
+  }
+
+  @override
+  Stream<List<StoryModel>>? getAllStories() {
+    return _dbService.getAllStories();
+  }
+
+  @override
+  Future<bool> saveStory(StoryModel storyModel) {
+    return _dbService.saveStory(storyModel);
+  }
 
 
 

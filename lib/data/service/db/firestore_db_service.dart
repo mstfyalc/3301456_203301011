@@ -1,4 +1,6 @@
+import 'package:mychat/model/comment_model.dart';
 import 'package:mychat/model/post_model.dart';
+import 'package:mychat/model/story_model.dart';
 
 import '../../../model/chat_profile_model.dart';
 import '../../../model/conversations_model.dart';
@@ -156,14 +158,15 @@ class FireStoreDbService implements DbBase {
     String postId = _fireStore.collection('posts').doc().id;
 
     postModel.postId = postId;
-
     // Save post
     await _fireStore
-        .collection('post')
+        .collection('users-post')
         .doc(postModel.fromId)
         .collection('posts')
         .doc(postId)
         .set(postModel.toMap());
+
+    await _fireStore.collection('posts').doc(postId).set(postModel.toMap());
 
     return true;
   }
@@ -171,7 +174,7 @@ class FireStoreDbService implements DbBase {
   @override
   Stream<List<PostModel>>? getPostsByUserId(String userId) {
     return _fireStore
-        .collection('post')
+        .collection('users-post')
         .doc(userId)
         .collection('posts')
         .orderBy('createdAt', descending: true)
@@ -182,55 +185,89 @@ class FireStoreDbService implements DbBase {
   }
 
   @override
-  Future<void> increasePostLike(String postId, String userId) async {
-    int globalLike = 0;
-    DocumentSnapshot? _post = await _fireStore
-        .collection('post')
-        .doc(userId)
+  Stream<List<PostModel>> getAllPost() {
+    return _fireStore
         .collection('posts')
-        .doc(postId)
-        .get();
-
-    if (_post.exists) {
-      Map<String, dynamic> _postMap = _post.data() as Map<String, dynamic>;
-      PostModel post = PostModel.fromMap(_postMap);
-      int? like = post.likes;
-
-      globalLike = like! + 1;
-
-      await _fireStore
-          .collection('post')
-          .doc(userId)
-          .collection('posts')
-          .doc(postId)
-          .update({'likes': globalLike});
-    }
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapShots) =>
+        snapShots
+            .docs.map((doc) => PostModel.fromMap(doc.data())).toList());
   }
 
   @override
-  Future<void> decreasePostLike(String postId, String userId) async {
-    int globalLike = 0;
-    DocumentSnapshot? _post = await _fireStore
-        .collection('post')
-        .doc(userId)
-        .collection('posts')
-        .doc(postId)
-        .get();
+  Future<bool> saveComment(CommentModel commentModel) async {
+    String commentId = _fireStore.collection('comments').doc().id;
+    commentModel.id = commentId;
 
-    if (_post.exists) {
-      Map<String, dynamic> _postMap = _post.data() as Map<String, dynamic>;
-      PostModel post = PostModel.fromMap(_postMap);
-      int? like = post.likes;
-      if (like! > 0) {
-        globalLike = like - 1;
+    //Save comment
+    await _fireStore
+        .collection('comments')
+        .doc(commentModel.postId)
+        .collection('comment')
+        .doc(commentId)
+        .set(commentModel.toMap());
 
-        await _fireStore
-            .collection('post')
-            .doc(userId)
-            .collection('posts')
-            .doc(postId)
-            .update({'likes': globalLike});
-      }
-    }
+    return true;
   }
+
+  @override
+  Stream<List<CommentModel>>? getAllCommentByPostId(String postId) {
+    return _fireStore
+        .collection('comments')
+        .doc(postId)
+        .collection('comment')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshots) => snapshots.docs
+        .map((doc) => CommentModel.fromMap(doc.data()))
+        .toList());
+  }
+
+  @override
+  Stream<List<ConversationsModel>>? getConversationByName(String conName,String userId) {
+    return _fireStore
+        .collection('conversations')
+        .where('fromWho', isEqualTo: userId)
+        .where('toName',isEqualTo: conName)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshots) => snapshots.docs
+        .map((doc) => ConversationsModel.fromMap(doc.data()))
+        .toList());
+  }
+
+  @override
+  Stream<List<StoryModel>>? getAllStories() {
+    return _fireStore
+        .collection('stories')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapShots) =>
+        snapShots
+            .docs.map((doc) => StoryModel.fromMap(doc.data())).toList());
+  }
+
+  @override
+  Future<bool> saveStory(StoryModel storyModel) async {
+    //Create Story Id
+    String storyId = _fireStore.collection('stories').doc().id;
+    storyModel.storyId = storyId;
+
+    //Save Story for User Profile
+    await _fireStore
+        .collection('users-stories')
+        .doc(storyModel.fromId)
+        .collection('stories')
+        .doc(storyId)
+        .set(storyModel.toMap());
+
+    //Save story for global
+    await _fireStore.collection('stories').doc(storyId).set(storyModel.toMap());
+
+    return true;
+
+  }
+
+
 }

@@ -218,7 +218,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                             bottom: 2,
                                             left: 5,
                                             right: 5),
-                                        height: 205,
+                                        height: 191,
                                         child: Column(
                                           children: [
                                             Container(
@@ -230,16 +230,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                                   color:
                                                       const Color(0xffadb5bd)),
                                             ),
-                                            const ListTile(
-                                              title:
-                                                  Text('Change profile photo'),
-                                            ),
+                                            const SizedBox(height: 10,),
+                                            Text('Change profile photo',style: GoogleFonts.lato(fontSize: 17,fontWeight: FontWeight.w400),),
+                                            const SizedBox(height: 5,),
                                             const Divider(),
                                             ListTile(
                                               leading: const Icon(
                                                   CupertinoIcons.camera),
-                                              title: const Text(
-                                                  'Take from camera'),
+                                              title:  Text(
+                                                  'Take from camera',style: GoogleFonts.lato(),),
                                               onTap: ()  {
                                                 _photoFromCamera();
                                                 Navigator.pop(context);
@@ -248,8 +247,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                             ListTile(
                                                 leading: const Icon(
                                                     CupertinoIcons.photo),
-                                                title: const Text(
-                                                    'Select from gallery'),
+                                                title:  Text(
+                                                    'Select from gallery',style: GoogleFonts.lato()),
                                                 onTap: ()   {
                                                   _photoFromGallery();
                                                   Navigator.pop(context);

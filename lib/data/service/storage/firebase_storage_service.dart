@@ -16,7 +16,6 @@ class FireBaseStorageService implements StorageBase {
 
   @override
   Future<String> uploadProfilePhoto(String userId, String path, File photo) async {
-    debugPrint('Firebase storage service start');
     TaskSnapshot taskSnapshot =  await _firebaseStorage.ref('users/$userId/$path/${Random().nextInt(1550)}').putFile(photo);
     final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     return downloadUrl;
@@ -24,8 +23,14 @@ class FireBaseStorageService implements StorageBase {
 
   @override
   Future<String> uploadPost(String userId, String path, File photo) async {
-    debugPrint('uploadPost');
     TaskSnapshot taskSnapshot =  await _firebaseStorage.ref('post/$userId/$path/${Random().nextInt(1550)}').putFile(photo);
+    final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    return downloadUrl;
+  }
+
+  @override
+  Future<String> uploadStory(String userId, String path, File photo) async {
+    TaskSnapshot taskSnapshot = await _firebaseStorage.ref('story/$userId/$path/${Random().nextInt(1550)}').putFile(photo);
     final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     return downloadUrl;
   }

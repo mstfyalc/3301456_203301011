@@ -25,4 +25,9 @@ class UserStorageRepository implements StorageBase{
     return await _fireBaseStorageService.uploadPost(userId, path, photo);
   }
 
+  @override
+  Future<String> uploadStory(String userId, String path, File photo) {
+    return _fireBaseStorageService.uploadStory(userId, path, photo);
+  }
+
 }

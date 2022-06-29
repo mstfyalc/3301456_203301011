@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mychat/ui/constant/constant_color.dart';
+import 'package:mychat/ui/pages/show_stories_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/conversations_model.dart';
 import '../../model/new_user_model.dart';
+import '../../model/story_model.dart';
 import '../../viewModel/user_view_model.dart';
 import '../constant/constant_style.dart';
 import 'message_page.dart';
@@ -20,7 +22,7 @@ class ChatsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     UserViewModel _userViewModel = Provider.of<UserViewModel>(context);
     NewUserModel? currentUser = _userViewModel.userModel;
-    TextEditingController _conversationsSearchQuery = TextEditingController();
+    //TextEditingController _conversationsSearchQuery = TextEditingController();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -34,7 +36,7 @@ class ChatsPage extends StatelessWidget {
         actions: [
           CircleAvatar(
             radius: 18,
-            backgroundColor: const Color(0xffc1c8c7),
+            backgroundColor: const Color(0xff000000),
             child: IconButton(
               onPressed: () {},
               icon: const Icon(
@@ -49,7 +51,7 @@ class ChatsPage extends StatelessWidget {
           ),
           CircleAvatar(
             radius: 18,
-            backgroundColor: const Color(0xffc1c8c7),
+            backgroundColor: const Color(0xff000000),
             child: IconButton(
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).push(
@@ -71,27 +73,96 @@ class ChatsPage extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 20, bottom: 10, left: 15, right: 15),
+            padding:  const EdgeInsets.only(top: 15, bottom: 20, left: 10,right:10),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: const Color(0xffdee2e6)),
-              child: TextFormField(
-                autofocus: false,
-                autocorrect: true,
-                controller: _conversationsSearchQuery,
-                decoration: InputDecoration(
-                    hintText: 'Search in conversations',
-                    hintStyle: GoogleFonts.lato(fontSize: 15),
-                    border: InputBorder.none,
-                    prefixIcon: const Icon(
-                      CupertinoIcons.search,
-                      size: 19,
-                    )),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(left: 20,right:10),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height*0.05,
+              decoration: const BoxDecoration(
+                color : Color(0xffE8E8E8),
+                borderRadius: BorderRadius.all(Radius.circular(25))
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Search in chat\'s...', style: GoogleFonts.lato(fontSize: 16,color: const Color(0xff888888)),),
+                  const Icon(CupertinoIcons.search,color:  Color(0xff888888))
+                ],
               ),
             ),
           ),
+          /*Padding(
+            padding: const EdgeInsets.only(top: 5, bottom: 25, left: 5),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: StreamBuilder(
+                stream: _userViewModel.getAllStories(),
+                builder: (BuildContext context,  AsyncSnapshot<List<StoryModel>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }else if (snapshot.connectionState ==
+                      ConnectionState.active ||
+                      snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return const Text('Error');
+                    } else if (!snapshot.hasData) {
+                      return const Center(
+                        child: Text('No talks'),
+                      );
+                    } else if (snapshot.hasData) {
+                      List<StoryModel> allStories = snapshot.data!;
+                      return allStories.isNotEmpty
+                          ? Container(
+                        child: ListView.builder(
+                            itemCount: allStories.length,
+                            itemBuilder: (context, index) {
+                              StoryModel currentStory =
+                              allStories[index];
+                              return GestureDetector(
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      border: Border.all(
+                                          color: ConstantColor.appColor, width: 1.5),
+                                      borderRadius:
+                                      const BorderRadius.all(Radius.circular(60))),
+                                  child:  Padding(
+                                    padding: const EdgeInsets.all(6),
+                                    child: CircleAvatar(
+                                      radius: 26,
+                                      backgroundImage: NetworkImage(
+                                          currentStory.fromImageUrl),
+                                    ),
+                                  ),
+                                ),
+                                onTap: (){
+                                  Navigator.of(context, rootNavigator: true).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>  ShowStoriesPage(currentStory: currentStory,)));
+                                },
+                              );
+                            }),
+                      )
+                          : emptyConversations(context);
+                    } else {
+                      return const Center(
+                        child: Text('Something go wrong'),
+                      );
+                    }
+                  }else {
+                    return const Center(
+                      child: Text('Connection error'),
+                    );
+                  }
+                }
+              ),
+            ),
+          ),*/
           Expanded(
             child: StreamBuilder(
               stream: _userViewModel.getAllConversations(currentUser!.userId),
@@ -132,17 +203,6 @@ class ChatsPage extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(4),
-                                          width: 22,
-                                          height: 22,
-                                          child: Text('1',textAlign:TextAlign.center,style:GoogleFonts.lato(fontSize: 10,color: Colors.white,fontWeight: FontWeight.w700
-                                          ) ,),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              color: ConstantColor.appColor),
-                                        ),
                                         Text(
                                             showHourAndMin(
                                                 currentConversation.createdAt),
@@ -180,7 +240,8 @@ class ChatsPage extends StatelessWidget {
 
   void redirectToMessagePage(BuildContext context, String idToMessageUser,
       UserViewModel userViewModel) async {
-    NewUserModel? userToMessage = await userViewModel.getUserById(idToMessageUser);
+    NewUserModel? userToMessage =
+        await userViewModel.getUserById(idToMessageUser);
     Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
         builder: (context) => MessagePage(
               userToMessage: userToMessage!,
@@ -190,10 +251,10 @@ class ChatsPage extends StatelessWidget {
 
   Widget emptyConversations(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(top: 80),
       child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
@@ -297,32 +358,9 @@ class ChatsPage extends StatelessWidget {
   }
 
   Widget searchInConversation(TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20, bottom: 10, left: 15, right: 15),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
-            color: const Color(0xffdee2e6)),
-        child: TextFormField(
-          autofocus: false,
-          autocorrect: true,
-          controller: controller,
-          onChanged: (q){
-            if(q.isNotEmpty){
-              controller.text = q;
-            }
-          },
-          decoration: InputDecoration(
-              hintText: 'Search in conversations',
-              hintStyle: GoogleFonts.lato(fontSize: 15),
-              border: InputBorder.none,
-              prefixIcon: const Icon(
-                CupertinoIcons.search,
-                size: 19,
-              )),
-        ),
-      ),
+    return const Padding(
+      padding: EdgeInsets.only(top: 20, bottom: 10, left: 15, right: 15),
+      child: Text('Fuck u'),
     );
   }
 
@@ -331,12 +369,12 @@ class ChatsPage extends StatelessWidget {
     var messageDate = dateFormatter.format(date!.toDate());
     return messageDate;
   }
-  
-  List<ConversationsModel> filteredList(List<ConversationsModel> allConversation,String q){
-    List<ConversationsModel> filteredList = allConversation.where((conversation) => conversation.fromName.contains(q)).toList();
+
+  List<ConversationsModel> filteredList(
+      List<ConversationsModel> allConversation, String q) {
+    List<ConversationsModel> filteredList = allConversation
+        .where((conversation) => conversation.fromName.contains(q))
+        .toList();
     return filteredList;
   }
-  
-  
-  
 }

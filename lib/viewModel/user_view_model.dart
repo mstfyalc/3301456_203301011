@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mychat/model/post_like_model.dart';
 import 'package:mychat/model/post_model.dart';
+import 'package:mychat/model/story_model.dart';
 
 
 import '../data/repository/user_auth_repository.dart';
@@ -10,6 +12,7 @@ import '../data/repository/user_db_repository.dart';
 import '../data/repository/user_storage_repository.dart';
 import '../data/service/auth/auth_base.dart';
 import '../model/chat_profile_model.dart';
+import '../model/comment_model.dart';
 import '../model/conversations_model.dart';
 import '../model/message_model.dart';
 import '../model/new_user_model.dart';
@@ -220,6 +223,31 @@ class UserViewModel with ChangeNotifier implements AuthBase {
     // TODO: implement getCurrentUser
     throw UnimplementedError();
   }
+
+
+  Future<bool> saveComment(CommentModel commentModel) async{
+    return  await _userDbRepository.saveComment(commentModel);
+  }
+
+
+
+  Stream<List<CommentModel>>? getAllCommentsByPostId(String postId){
+    return _userDbRepository.getAllCommentByPostId(postId);
+  }
+
+
+  Future<bool> saveStory(StoryModel storyModel){
+    return _userDbRepository.saveStory(storyModel);
+  }
+
+  Stream<List<StoryModel>>? getAllStories(){
+    return _userDbRepository.getAllStories();
+  }
+
+
+
+
+
 
 
 

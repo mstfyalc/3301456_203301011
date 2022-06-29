@@ -7,6 +7,7 @@ import '../data/repository/user_db_repository.dart';
 import '../data/repository/user_storage_repository.dart';
 import '../model/new_user_model.dart';
 import '../model/post_model.dart';
+import '../model/story_model.dart';
 import '../provider/get_it/locator.dart';
 
 enum ProfileViewState { idle, busy, loaded, error }
@@ -119,13 +120,24 @@ class ProfileViewModel extends ChangeNotifier {
     return _userDbRepository.getPostsByUserId(userId);
   }
 
-  Future<void> decreasePostLike(String postId,String fromId){
-    return _userDbRepository.decreasePostLike(postId, fromId);
+
+  Future<String> getStoryUrl(String userId, String path, File photo) async {
+    return await _userStorageRepository.uploadStory(userId, path, photo);
   }
 
-  Future<void> increasePostLike(String postId,String fromId){
-    return _userDbRepository.increasePostLike(postId, fromId);
+
+  Future<bool> saveStory(StoryModel storyModel) async {
+    try {
+      currentState = ProfileViewState.busy;
+      bool result = await _userDbRepository.saveStory(storyModel);
+      return result;
+    } finally {
+      currentState = ProfileViewState.idle;
+    }
   }
+
+
+
 
 
 

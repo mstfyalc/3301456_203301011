@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mychat/model/new_user_model.dart';
 
 import '../../../constant/constant_color.dart';
@@ -31,7 +32,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
           _navigationBarItem(TabItem.profile),
         ],
         onTap: (index) => selectedTab(TabItem.values[index]),
-        activeColor: ConstantColor.appColor,
+        activeColor: Colors.black,
+        //height: 45,
+        iconSize: 25,
       ),
       tabBuilder: (context, index) {
         final itemToShow = TabItem.values[index];
